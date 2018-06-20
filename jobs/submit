@@ -6,9 +6,9 @@
 #MSUB -m bae
 #MSUB -M markus.goetz@kit.edu
 
-SCRIPT="$PROJECT/cluster-sampling/cnn/spectral_cnn.py"
+SCRIPT="${PROJECT}/cluster-sampling/cnn/spectral_cnn.py"
 DATASET="pavia"
-DATA="$PROJECT/cluster-sampling/data/$DATASET.h5"
+DATA="${PROJECT}/cluster-sampling/data/${DATASET}.h5"
 FRACTION=0.1
 MODE="random"
 SEED=0
@@ -17,14 +17,15 @@ MIN_POINTS=9
 
 if [ $MODE = "random" ];
 then
-    BASE="$DATASET_$FRACTION_$SEED.h5"
+    BASE="${DATASET}_${FRACTION}_${SEED}.h5"
 else
-    BASE="$DATASET_$FRACTION_$EPS_$MIN_POINTS.h5"
+    BASE="${DATASET}_${FRACTION}_${EPS}_${MIN_POINTS}.h5"
 fi
-MASK="$PROJECT/cluster-sampling/data/$BASE"
+MASK="${PROJECT}/cluster-sampling/data/${BASE}"
+OUT="${PROJECT}/cluster-sampling/out/${BASE}"
 
 GPUS=4
-UDOCKER="$PROJECT/.udocker"
+UDOCKER="${PROJECT}/.udocker"
 UDOCKER_CONTAINER="tensorflow_1.8.0-gpu-py3"
 UDOCKER_DIRECTORY="/home"
 
@@ -35,10 +36,10 @@ do
                 --env="CUDA_VISIBLE_DEVICE=$i" \
                 --workdir=${UDOCKER_DIRECTORY} ${UDOCKER_CONTAINER} \
                 ${SCRIPT} -g -t -s ${i} -w 7 -b 100 -e 5000  \
-                --model "$BASE-model-$i" \
-                --train_history "$BASE-train-$i" \
-                --test_history "$BASE-test-$i" \
-                --results "$BASE-results-$i" \
+                --model "${BASE}-model-${i}" \
+                --train-history "${OUT}-train-${i}" \
+                --test-history "${OUT}-test-${i}" \
+                --results "${OUT}-results-${i}" \
                 ${DATA} ${MASK} &
     processes[${i}]=$!
 done

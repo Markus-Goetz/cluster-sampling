@@ -344,7 +344,7 @@ def parse_arguments():
     )
     parser.add_argument(
         '-s', '--seed',
-        type=positive_int,
+        type=int,
         action='store',
         default=0,
         help='seed for the initialization of the network'
