@@ -196,6 +196,9 @@ def train_network(arguments):
     # prediction on the test set
     prediction_start_time = time.time()
     print('\tPrediction... ', end='', flush=True)
+    # restore best test model
+    if arguments.test:
+        model.load_weights(arguments.model)
     pred_selection = selection == data.TEST
     pred_items = pred_selection.astype(np.uint8).sum()
     test_prediction = model.predict_generator(
