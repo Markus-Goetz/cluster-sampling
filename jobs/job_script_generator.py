@@ -8,10 +8,8 @@ JOB_TEMPLATE = """#!/usr/bin/env bash
 #MSUB -m bae
 #MSUB -M markus.goetz@kit.edu
 
-module purge
-deactivate
-
-udocker setup --exectmode=F3 --nvidia keras-tf
+newgrp fh2-project-devel
+cd $PROJECT/cluster-sampling/cnn
 
 {lines}
 
@@ -22,13 +20,13 @@ done
 """
 
 LINE_TEMPLATE = """
-udocker run --volume=$PROJECT/cluster-sampling/cnn:/home --env="CUDA_VISIBLE_DEVICE={gpu}" --workdir=/home keras-tf \\
-            ./spectral-cnn.py -g -t -s {seed} -w 9 -b 50 -e 400  \\
-            --model "../out/{data}_{mask}_{seed}_model.h5" \\
-            --train-history "../out/{data}_{mask}_{seed}_train.csv" \\
-            --test-history "../out/{data}_{mask}_{seed}_test.csv" \\
-            --results "../out/{data}_{mask}_{seed}_results.csv" \\
-            ../data/{data}.h5 ../data/{data}_{mask}.h5 &
+
+./spectral-cnn.py -g -t -s {seed} -w 9 -b 50 -e 400  \\
+--model "../out/{data}_{mask}_{seed}_model.h5" \\
+--train-history "../out/{data}_{mask}_{seed}_train.csv" \\
+--test-history "../out/{data}_{mask}_{seed}_test.csv" \\
+--results "../out/{data}_{mask}_{seed}_results.csv" \\
+../data/{data}.h5 ../data/{data}_{mask}.h5 &
 processes[{gpu}]=$!
 """
 
