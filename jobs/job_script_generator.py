@@ -9,6 +9,9 @@ JOB_TEMPLATE = """#!/usr/bin/env bash
 #MSUB -M markus.goetz@kit.edu
 
 newgrp fh2-project-devel
+module restore py3
+source ~/.virtualenvs/p3fh2/bin/activate
+
 cd $PROJECT/cluster-sampling/cnn
 
 {lines}
@@ -20,8 +23,8 @@ done
 """
 
 LINE_TEMPLATE = """
-
-./spectral-cnn.py -g -t -s {seed} -w 9 -b 50 -e 400  \\
+export CUDA_VISIBLE_DEVICES={gpu}
+./spectral_cnn.py -g -t -s {seed} -w 9 -b 50 -e 20  \\
 --model "../out/{data}_{mask}_{seed}_model.h5" \\
 --train-history "../out/{data}_{mask}_{seed}_train.csv" \\
 --test-history "../out/{data}_{mask}_{seed}_test.csv" \\
