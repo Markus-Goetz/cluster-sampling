@@ -1,22 +1,3 @@
-"""
-Hyper-spectral remote sensing data preprocessor
-
-The preparation of the data for the use in CNNs which contain spatial and spectral information works as follows:
-1) take as input a 3D-numpy-array (width, height, channels) containing intensity-values
-   and a 2D-numpy-array (width, height) containing the labels for each pixel.
-   additionally give the path for saving the prepared data and a mode, saying how to split the training and test set
-2) create a (width, height)-nparray containing ones for every pixel which will be used as training example
-3) calculate mean and standard deviation for the training samples
-4) take those 3 nparrays, a list of labels which should be excluded in addition to the empty ones and a window_size
-   from those information create 4 new data structures (x_train, y_train, x_test, y_test):
-   two 4D nparrays being a list of 3D 'window tensors' and two 1D label tensors
-   a window tensor contains the intensity values for a given pixel and the surrounding pixels,
-   therefor the label tensor contains the central label
-   use same-padding for pixels at the edge
-5) safe the new data structures, the bool_matrix, mean and stddev of the training sample and excluded in a .hdf5-file
-6) the data can now be easily loaded with the h5py-routines, but still has to be normalized (decreases data size)
-"""
-
 import time
 
 import h5py

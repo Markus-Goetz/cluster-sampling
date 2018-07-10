@@ -4,7 +4,7 @@ JOB_TEMPLATE = """#!/usr/bin/env bash
 
 #MSUB -N cluster-sampling-{job}
 #MSUB -l nodes=1:ppn={gpus}:visu
-#MSUB -l walltime=03:00:00
+#MSUB -l walltime=00:00:30:00
 #MSUB -m bae
 #MSUB -M markus.goetz@kit.edu
 
@@ -25,7 +25,7 @@ done
 LINE_TEMPLATE = """
 export CUDA_VISIBLE_DEVICES={gpu}
 ./spectral_cnn.py -g -t -s {seed} -w 9 -b 50 -e 400  \\
---model "../out/{data}_{mask}_{seed}_model.h5" \\
+--checkpoint "../out/{data}_{mask}_{seed}_model.h5" \\
 --train-history "../out/{data}_{mask}_{seed}_train.csv" \\
 --test-history "../out/{data}_{mask}_{seed}_test.csv" \\
 --results "../out/{data}_{mask}_{seed}_results.csv" \\
@@ -34,7 +34,7 @@ processes[{gpu}]=$!
 """
 
 GPUS = 4
-DATA = 'houston'
+DATA = 'indian_pines'
 MODES = ['random', 'size', 'stddev']
 FRACTIONS = [0.1, 0.3, 0.6, 0.9]
 SEEDS = range(5)

@@ -166,7 +166,7 @@ def train_network(arguments):
             optimizer=optimizers.SGD(lr=LEARNING_RATE, momentum=MOMENTUM, decay=DECAY),
             loss=LOSS, metrics=[ACCURACY]
         )
-
+    
     # add tracking callbacks
     callbacks = [TrackTrainHistory(arguments.train_history)]
     if arguments.test:
@@ -192,12 +192,14 @@ def train_network(arguments):
         shuffle=False
     )
     print('\n\t[Done, took: {:.2f}s]'.format(time.time() - training_start_time))
-
+    
     # prediction on the test set
     prediction_start_time = time.time()
     print('\tPrediction... ', end='', flush=True)
     # restore best test model
-    if arguments.test:
+    if arguments.test and arguments.checkpoint:
+        model.load_weights(arguments.checkpoint)
+    elif arguments.test and arguments.model:
         model.load_weights(arguments.model)
     pred_selection = selection == data.TEST
     pred_items = pred_selection.astype(np.uint8).sum()
